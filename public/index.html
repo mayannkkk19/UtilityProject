@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h1>Phone side client page for sending images...</h1>
+
+  <input id="cameraInput" type="file" accept="image/*" capture="environment">
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io({
+      transports: ['websocket']
+    });
+    const camInput = document.getElementById('cameraInput');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('room');
+
+    // 1. Join room on initial page load
+    if (roomId) {
+      socket.emit('join-room', roomId);
+    }
+
+    // Helper function to read file asynchronously
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    camInput.addEventListener('change', async () => {
+      const file = camInput.files[0];
+      if (!file) return;
+
+      try {
+        // Read the file into Base64 FIRST
+        const imageData = await fileToBase64(file);
+
+        // Re-verify socket connection before sending
+        if (!socket.connected) {
+          socket.connect();
+        }
+
+        // Explicitly re-join the room right before emitting payload
+        socket.emit('join-room', roomId);
+
+        // Emit image to server
+        socket.emit('send-image', { roomId, imageData });
+        console.log('Image successfully emitted!');
+        alert('Photo sent to PC clipboard!');
+      } catch (err) {
+        console.error('Error handling image upload:', err);
+      }
+    });
+  </script>
+</body>
+
+</html>
