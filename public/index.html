@@ -8,10 +8,27 @@
   <style>
     body {
       background-color: lightpink;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .main-content {
       background-color: lightblue;
+      display: flex;
+      flex-direction: column;
+      width: 1fr;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .cam-input {
+      display: block;
+      border-style: solid;
+      padding: 1em;
+      border-radius: 4px;
+      border-color: black;
+      color: white;
+      background-color: black;
     }
   </style>
 </head>
@@ -20,7 +37,7 @@
   <div class="main-content">
     <h1>Phone side client page for sending images...</h1>
 
-    <input id="cameraInput" type="file" accept="image/*" capture="environment">
+    <input id="cameraInput" class="cam-input" type="file" accept="image/*" capture="environment">
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
