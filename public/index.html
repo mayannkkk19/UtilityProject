@@ -5,12 +5,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    body {
+      background-color: lightpink;
+    }
+
+    .main-content {
+      background-color: lightblue;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Phone side client page for sending images...</h1>
+  <div class="main-content">
+    <h1>Phone side client page for sending images...</h1>
 
-  <input id="cameraInput" type="file" accept="image/*" capture="environment">
+    <input id="cameraInput" type="file" accept="image/*" capture="environment">
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
